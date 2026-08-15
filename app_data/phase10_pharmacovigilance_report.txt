@@ -1,0 +1,292 @@
+GENAR-PADER-AI
+PHARMACOVIGILANCE DECISION-SUPPORT REPORT
+================================================================================
+
+Analysis scope: Bisoprolol-containing safety reports
+Analysis type: Descriptive and exploratory pharmacovigilance review
+Report generation layer: Controlled structured-data reporting
+
+1. EXECUTIVE SUMMARY
+====================
+
+The analysis contains 1,024 integrated safety reports. All 1,024 cases contain Bisoprolol exposure.
+
+A total of 8 reaction candidates met the exploratory screening criteria and were retained for review prioritization.
+
+The review-priority distribution consists of 1 higher-priority, 2 moderate-priority, and 5 lower-priority candidates.
+
+The highest-ranked review candidate is Acute kidney injury, with 22 reported cases.
+
+These classifications represent review-priority categories only. They do not represent confirmed pharmacovigilance signals.
+
+2. DATASET OVERVIEW
+===================
+
+Integrated safety reports: 1,024
+Bisoprolol-containing reports: 1,024
+Candidate reactions: 8
+Higher-priority candidates: 1
+Moderate-priority candidates: 2
+Lower-priority candidates: 5
+
+3. METHODOLOGY OVERVIEW
+=======================
+
+Candidate reactions were identified in the preceding validated pharmacovigilance analysis phases and classified for review priority using reported-case frequency and seriousness patterns.
+
+The current reporting stage does not perform new primary pharmacovigilance calculations. It converts validated structured results into a human-readable decision-support report.
+
+No internal non-Bisoprolol comparator cohort is available. Therefore ROR and PRR are not calculated and no disproportionality conclusion is made.
+
+4. CANDIDATE REVIEW PRIORITY SUMMARY
+====================================
+
+01. Acute kidney injury | Reported cases: 22 | Serious cases: 22 | Priority: Higher priority
+02. Drug ineffective | Reported cases: 11 | Serious cases: 11 | Priority: Moderate priority
+03. Cholestasis | Reported cases: 6 | Serious cases: 6 | Priority: Lower priority
+04. Hypokalaemia | Reported cases: 6 | Serious cases: 6 | Priority: Moderate priority
+05. Hyponatraemia | Reported cases: 6 | Serious cases: 6 | Priority: Lower priority
+06. Drug interaction | Reported cases: 5 | Serious cases: 5 | Priority: Lower priority
+07. Hepatic cytolysis | Reported cases: 5 | Serious cases: 5 | Priority: Lower priority
+08. Joint swelling | Reported cases: 5 | Serious cases: 5 | Priority: Lower priority
+
+5. CANDIDATE-BY-CANDIDATE EVIDENCE
+==================================
+
+5.1 Acute kidney injury
+------------------------
+Reported cases: 22
+Percentage of analyzed cases: 2.15%
+Serious cases: 22 (100.00%)
+Death cases: 1
+Hospitalization cases: 15
+Review priority: Higher priority
+
+Evidence summary:
+Acute kidney injury was reported in 22 Bisoprolol-containing cases (2.15% of the analyzed cohort). 22 cases were classified as serious, including 1 death-associated case(s) and 15 hospitalization-associated case(s). The candidate is assigned higher_priority_candidate for review purposes only. This classification does not establish causality, incidence, disproportionality, or a confirmed safety signal.
+
+Recommended follow-up:
+Prioritize for detailed case review, temporal assessment, clinical context review, confounder assessment, and external evidence evaluation.
+
+Interpretation:
+This reaction represents a reported-case review candidate. Causality, incidence, disproportionality, and confirmed signal status are not established.
+
+5.2 Drug ineffective
+---------------------
+Reported cases: 11
+Percentage of analyzed cases: 1.07%
+Serious cases: 11 (100.00%)
+Death cases: 0
+Hospitalization cases: 1
+Review priority: Moderate priority
+
+Evidence summary:
+Drug ineffective was reported in 11 Bisoprolol-containing cases (1.07% of the analyzed cohort). 11 cases were classified as serious, including 0 death-associated case(s) and 1 hospitalization-associated case(s). The candidate is assigned moderate_priority_candidate for review purposes only. This classification does not establish causality, incidence, disproportionality, or a confirmed safety signal.
+
+Recommended follow-up:
+Perform focused case review and evaluate clinical context, co-medications, underlying disease, temporal information, and external evidence.
+
+Interpretation:
+This reaction represents a reported-case review candidate. Causality, incidence, disproportionality, and confirmed signal status are not established.
+
+5.3 Cholestasis
+----------------
+Reported cases: 6
+Percentage of analyzed cases: 0.59%
+Serious cases: 6 (100.00%)
+Death cases: 0
+Hospitalization cases: 3
+Review priority: Lower priority
+
+Evidence summary:
+Cholestasis was reported in 6 Bisoprolol-containing cases (0.59% of the analyzed cohort). 6 cases were classified as serious, including 0 death-associated case(s) and 3 hospitalization-associated case(s). The candidate is assigned lower_priority_candidate for review purposes only. This classification does not establish causality, incidence, disproportionality, or a confirmed safety signal.
+
+Recommended follow-up:
+Continue descriptive monitoring and review if additional cases or supporting evidence become available.
+
+Interpretation:
+This reaction represents a reported-case review candidate. Causality, incidence, disproportionality, and confirmed signal status are not established.
+
+5.4 Hypokalaemia
+-----------------
+Reported cases: 6
+Percentage of analyzed cases: 0.59%
+Serious cases: 6 (100.00%)
+Death cases: 0
+Hospitalization cases: 5
+Review priority: Moderate priority
+
+Evidence summary:
+Hypokalaemia was reported in 6 Bisoprolol-containing cases (0.59% of the analyzed cohort). 6 cases were classified as serious, including 0 death-associated case(s) and 5 hospitalization-associated case(s). The candidate is assigned moderate_priority_candidate for review purposes only. This classification does not establish causality, incidence, disproportionality, or a confirmed safety signal.
+
+Recommended follow-up:
+Perform focused case review and evaluate clinical context, co-medications, underlying disease, temporal information, and external evidence.
+
+Interpretation:
+This reaction represents a reported-case review candidate. Causality, incidence, disproportionality, and confirmed signal status are not established.
+
+5.5 Hyponatraemia
+------------------
+Reported cases: 6
+Percentage of analyzed cases: 0.59%
+Serious cases: 6 (100.00%)
+Death cases: 0
+Hospitalization cases: 4
+Review priority: Lower priority
+
+Evidence summary:
+Hyponatraemia was reported in 6 Bisoprolol-containing cases (0.59% of the analyzed cohort). 6 cases were classified as serious, including 0 death-associated case(s) and 4 hospitalization-associated case(s). The candidate is assigned lower_priority_candidate for review purposes only. This classification does not establish causality, incidence, disproportionality, or a confirmed safety signal.
+
+Recommended follow-up:
+Continue descriptive monitoring and review if additional cases or supporting evidence become available.
+
+Interpretation:
+This reaction represents a reported-case review candidate. Causality, incidence, disproportionality, and confirmed signal status are not established.
+
+5.6 Drug interaction
+---------------------
+Reported cases: 5
+Percentage of analyzed cases: 0.49%
+Serious cases: 5 (100.00%)
+Death cases: 0
+Hospitalization cases: 0
+Review priority: Lower priority
+
+Evidence summary:
+Drug interaction was reported in 5 Bisoprolol-containing cases (0.49% of the analyzed cohort). 5 cases were classified as serious, including 0 death-associated case(s) and 0 hospitalization-associated case(s). The candidate is assigned lower_priority_candidate for review purposes only. This classification does not establish causality, incidence, disproportionality, or a confirmed safety signal.
+
+Recommended follow-up:
+Continue descriptive monitoring and review if additional cases or supporting evidence become available.
+
+Interpretation:
+This reaction represents a reported-case review candidate. Causality, incidence, disproportionality, and confirmed signal status are not established.
+
+5.7 Hepatic cytolysis
+----------------------
+Reported cases: 5
+Percentage of analyzed cases: 0.49%
+Serious cases: 5 (100.00%)
+Death cases: 0
+Hospitalization cases: 3
+Review priority: Lower priority
+
+Evidence summary:
+Hepatic cytolysis was reported in 5 Bisoprolol-containing cases (0.49% of the analyzed cohort). 5 cases were classified as serious, including 0 death-associated case(s) and 3 hospitalization-associated case(s). The candidate is assigned lower_priority_candidate for review purposes only. This classification does not establish causality, incidence, disproportionality, or a confirmed safety signal.
+
+Recommended follow-up:
+Continue descriptive monitoring and review if additional cases or supporting evidence become available.
+
+Interpretation:
+This reaction represents a reported-case review candidate. Causality, incidence, disproportionality, and confirmed signal status are not established.
+
+5.8 Joint swelling
+-------------------
+Reported cases: 5
+Percentage of analyzed cases: 0.49%
+Serious cases: 5 (100.00%)
+Death cases: 0
+Hospitalization cases: 1
+Review priority: Lower priority
+
+Evidence summary:
+Joint swelling was reported in 5 Bisoprolol-containing cases (0.49% of the analyzed cohort). 5 cases were classified as serious, including 0 death-associated case(s) and 1 hospitalization-associated case(s). The candidate is assigned lower_priority_candidate for review purposes only. This classification does not establish causality, incidence, disproportionality, or a confirmed safety signal.
+
+Recommended follow-up:
+Continue descriptive monitoring and review if additional cases or supporting evidence become available.
+
+Interpretation:
+This reaction represents a reported-case review candidate. Causality, incidence, disproportionality, and confirmed signal status are not established.
+
+
+6. SERIOUSNESS ASSESSMENT
+=========================
+
+Acute kidney injury: 22 serious cases out of 22 reported cases (100.00%). Deaths=1; hospitalizations=15.
+Drug ineffective: 11 serious cases out of 11 reported cases (100.00%). Deaths=0; hospitalizations=1.
+Cholestasis: 6 serious cases out of 6 reported cases (100.00%). Deaths=0; hospitalizations=3.
+Hypokalaemia: 6 serious cases out of 6 reported cases (100.00%). Deaths=0; hospitalizations=5.
+Hyponatraemia: 6 serious cases out of 6 reported cases (100.00%). Deaths=0; hospitalizations=4.
+Drug interaction: 5 serious cases out of 5 reported cases (100.00%). Deaths=0; hospitalizations=0.
+Hepatic cytolysis: 5 serious cases out of 5 reported cases (100.00%). Deaths=0; hospitalizations=3.
+Joint swelling: 5 serious cases out of 5 reported cases (100.00%). Deaths=0; hospitalizations=1.
+
+Seriousness information describes the characteristics of reported cases and must not be interpreted as an estimate of population-level risk.
+
+7. RECOMMENDED FOLLOW-UP ACTIONS
+================================
+
+Acute kidney injury (Higher priority):
+priority_detailed_review
+
+Drug ineffective (Moderate priority):
+focused_review
+
+Cholestasis (Lower priority):
+continued_monitoring
+
+Hypokalaemia (Moderate priority):
+focused_review
+
+Hyponatraemia (Lower priority):
+continued_monitoring
+
+Drug interaction (Lower priority):
+continued_monitoring
+
+Hepatic cytolysis (Lower priority):
+continued_monitoring
+
+Joint swelling (Lower priority):
+continued_monitoring
+
+
+8. ANALYTICAL LIMITATIONS
+=========================
+
+Limitation 1: No internal non-Bisoprolol comparator cohort is available.
+Impact: ROR and PRR cannot be calculated from this dataset.
+Restriction: No disproportionality conclusion is permitted.
+
+Limitation 2: The dataset consists of reported safety cases.
+Impact: Reporting frequency does not provide an incidence denominator.
+Restriction: Reported percentages must not be interpreted as incidence.
+
+Limitation 3: Observed candidate reactions are descriptive case patterns.
+Impact: Temporal, clinical, and confounding information may be incomplete.
+Restriction: Causality must not be inferred from frequency alone.
+
+Limitation 4: Multiple concomitant medications occur in many cases.
+Impact: Alternative drug-related explanations may exist.
+Restriction: Co-medication presence does not establish interaction.
+
+Limitation 5: Spontaneous safety-report data may contain reporting biases.
+Impact: Observed reporting patterns may not reflect underlying risk.
+Restriction: Candidate ranking is review prioritization only.
+
+
+9. INTERPRETATION BOUNDARIES
+============================
+
+- Reported frequencies are not incidence estimates.
+- No causal relationship between Bisoprolol and the candidate reactions is established.
+- No internal non-Bisoprolol comparator cohort is available.
+- ROR has not been calculated.
+- PRR has not been calculated.
+- No disproportionality conclusion is established.
+- Candidate reactions are not confirmed safety signals.
+- Candidate reactions are not confirmed adverse reactions.
+- Co-medication patterns do not establish drug-drug interactions.
+- Review-priority classifications are triage categories only.
+
+10. FINAL PHARMACOVIGILANCE SUMMARY
+===================================
+
+The analysis identified 8 candidate reactions for structured review among 1,024 Bisoprolol-containing safety reports.
+
+Acute kidney injury received the highest review priority, with 22 reported cases.
+
+The candidate ranking is intended to support pharmacovigilance case-review prioritization and hypothesis generation.
+
+The available dataset does not support incidence estimation, causal attribution, disproportionality analysis, confirmation of a safety signal, or confirmation of drug-drug interactions.
+
+Further assessment should incorporate detailed case-level clinical review, temporal relationships, dechallenge/rechallenge information where available, alternative etiologies, co-medications, underlying disease, product information, and appropriate external evidence.

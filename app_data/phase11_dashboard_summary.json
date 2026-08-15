@@ -1,0 +1,32 @@
+{
+    "phase": 11,
+    "schema_version": "phase11_dashboard_v1",
+    "source_context_version": "phase10_v1",
+    "source_report_version": "phase10_report_v1",
+    "analysis_scope": "descriptive_exploratory_decision_support",
+    "total_safety_reports": 1024,
+    "bisoprolol_cases": 1024,
+    "candidate_reactions": 8,
+    "priority_distribution": {
+        "higher_priority_candidate": 1,
+        "moderate_priority_candidate": 2,
+        "lower_priority_candidate": 5
+    },
+    "top_candidate": {
+        "reaction": "Acute kidney injury",
+        "reported_cases": 22,
+        "priority": "higher_priority_candidate"
+    },
+    "analytical_status": {
+        "comparator_available": false,
+        "ror_available": false,
+        "prr_available": false,
+        "frequency_is_incidence": false,
+        "causality_established": false,
+        "disproportionality_established": false,
+        "confirmed_signal_established": false,
+        "drug_interaction_established": false
+    },
+    "interpretation": "Dashboard metrics summarize reported case patterns and review priorities only.",
+    "priority_interpretation": "Review priority is a triage classification and does not represent a confirmed safety signal."
+}

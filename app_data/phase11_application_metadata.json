@@ -1,0 +1,63 @@
+{
+    "schema_version": "phase11_metadata_v1",
+    "application_scope": "pharmacovigilance_decision_support",
+    "source": {
+        "phase": 10,
+        "context_version": "phase10_v1",
+        "report_version": "phase10_report_v1"
+    },
+    "current_phase": 11,
+    "dataset": {
+        "integrated_cases": 1024,
+        "bisoprolol_cases": 1024,
+        "candidate_reactions": 8
+    },
+    "analytical_restrictions": {
+        "comparator_available": false,
+        "ror_available": false,
+        "prr_available": false,
+        "frequency_is_incidence": false,
+        "causality_established": false,
+        "disproportionality_established": false,
+        "confirmed_signal_established": false,
+        "drug_interaction_established": false
+    },
+    "limitations": [
+        {
+            "limitation_id": 1,
+            "limitation": "No internal non-Bisoprolol comparator cohort is available.",
+            "impact": "ROR and PRR cannot be calculated from this dataset.",
+            "restriction": "No disproportionality conclusion is permitted."
+        },
+        {
+            "limitation_id": 2,
+            "limitation": "The dataset consists of reported safety cases.",
+            "impact": "Reporting frequency does not provide an incidence denominator.",
+            "restriction": "Reported percentages must not be interpreted as incidence."
+        },
+        {
+            "limitation_id": 3,
+            "limitation": "Observed candidate reactions are descriptive case patterns.",
+            "impact": "Temporal, clinical, and confounding information may be incomplete.",
+            "restriction": "Causality must not be inferred from frequency alone."
+        },
+        {
+            "limitation_id": 4,
+            "limitation": "Multiple concomitant medications occur in many cases.",
+            "impact": "Alternative drug-related explanations may exist.",
+            "restriction": "Co-medication presence does not establish interaction."
+        },
+        {
+            "limitation_id": 5,
+            "limitation": "Spontaneous safety-report data may contain reporting biases.",
+            "impact": "Observed reporting patterns may not reflect underlying risk.",
+            "restriction": "Candidate ranking is review prioritization only."
+        }
+    ],
+    "reporting_scope": "Descriptive and exploratory pharmacovigilance decision support.",
+    "review_priority_definition": "Review priorities are triage categories for follow-up and do not establish causality or confirmed safety signals.",
+    "frontend_warning": "Reported case frequency must not be displayed or interpreted as incidence.",
+    "comparator_warning": "No internal non-Bisoprolol comparator cohort is available.",
+    "disproportionality_warning": "ROR and PRR are unavailable and must not be displayed as calculated metrics.",
+    "interaction_warning": "Co-medication patterns are descriptive and do not establish drug-drug interactions."
+}

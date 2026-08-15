@@ -8,10 +8,6 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import PlainTextResponse
 
-# -------------------------------------------------------------------------
-# GENAI ASSISTANT ROUTER
-# -------------------------------------------------------------------------
-
 from backend.app.assistant import router as assistant_router
 
 
@@ -24,30 +20,66 @@ CURRENT_FILE = Path(__file__).resolve()
 BACKEND_DIR = CURRENT_FILE.parent.parent
 PROJECT_ROOT = BACKEND_DIR.parent
 
-RELEASE_DATA_DIR = PROJECT_ROOT / "release" / "data"
-SOURCE_DATA_DIR = PROJECT_ROOT / "data"
+RELEASE_DATA_DIR = (
+    PROJECT_ROOT
+    / "release"
+    / "data"
+)
+
+SOURCE_DATA_DIR = (
+    PROJECT_ROOT
+    / "data"
+)
+
+APP_DATA_DIR = (
+    PROJECT_ROOT
+    / "app_data"
+)
 
 
 def choose_data_dir() -> Path:
     """
-    Prefer the final validated release package.
+    Select the application data source.
 
-    Fall back to the normal data directory only during development.
+    Priority:
+    1. Validated local release data
+    2. Deployment-safe app_data package
+    3. Development data directory
+
+    The required Phase 11 API payload is used as the
+    availability check.
     """
 
     required_file = "phase11_api_payload.json"
 
-    release_file = RELEASE_DATA_DIR / required_file
-    source_file = SOURCE_DATA_DIR / required_file
+    release_file = (
+        RELEASE_DATA_DIR
+        / required_file
+    )
+
+    app_file = (
+        APP_DATA_DIR
+        / required_file
+    )
+
+    source_file = (
+        SOURCE_DATA_DIR
+        / required_file
+    )
 
     if release_file.exists():
         return RELEASE_DATA_DIR
+
+    if app_file.exists():
+        return APP_DATA_DIR
 
     if source_file.exists():
         return SOURCE_DATA_DIR
 
     raise RuntimeError(
-        "Could not locate Phase 11 application outputs."
+        "Could not locate Phase 11 application outputs. "
+        "Expected phase11_api_payload.json in "
+        "release/data, app_data, or data."
     )
 
 
@@ -55,43 +87,58 @@ DATA_DIR = choose_data_dir()
 
 
 # =============================================================================
-# DATA FILES
+# APPLICATION DATA FILES
 # =============================================================================
 
 FILES = {
     "dashboard":
-        DATA_DIR / "phase11_dashboard_summary.json",
+        DATA_DIR
+        / "phase11_dashboard_summary.json",
 
     "candidate_table":
-        DATA_DIR / "phase11_candidate_table.csv",
+        DATA_DIR
+        / "phase11_candidate_table.csv",
 
     "candidate_cards":
-        DATA_DIR / "phase11_candidate_cards.json",
+        DATA_DIR
+        / "phase11_candidate_cards.json",
 
     "metadata":
-        DATA_DIR / "phase11_application_metadata.json",
+        DATA_DIR
+        / "phase11_application_metadata.json",
 
     "api_payload":
-        DATA_DIR / "phase11_api_payload.json",
+        DATA_DIR
+        / "phase11_api_payload.json",
 
     "report":
-        DATA_DIR / "phase10_pharmacovigilance_report.txt",
+        DATA_DIR
+        / "phase10_pharmacovigilance_report.txt",
 
     "generated_report":
-        DATA_DIR / "phase10_generated_report.json",
+        DATA_DIR
+        / "phase10_generated_report.json",
 }
 
 
 # =============================================================================
-# HELPERS
+# HELPER FUNCTIONS
 # =============================================================================
 
-def load_json(path: Path) -> Any:
+def load_json(
+    path: Path,
+) -> Any:
+    """
+    Safely load a JSON file.
+    """
 
     if not path.exists():
         raise HTTPException(
             status_code=500,
-            detail=f"Required data file missing: {path.name}",
+            detail=(
+                f"Required data file missing: "
+                f"{path.name}"
+            ),
         )
 
     try:
@@ -105,24 +152,34 @@ def load_json(path: Path) -> Any:
         raise HTTPException(
             status_code=500,
             detail=(
-                f"Unable to read {path.name}: "
+                f"Unable to read "
+                f"{path.name}: "
                 f"{str(exc)}"
             ),
         )
 
 
 def load_candidate_table() -> pd.DataFrame:
+    """
+    Load the Phase 11 candidate table.
+    """
 
-    path = FILES["candidate_table"]
+    path = FILES[
+        "candidate_table"
+    ]
 
     if not path.exists():
         raise HTTPException(
             status_code=500,
-            detail="Candidate table is missing.",
+            detail=(
+                "Candidate table is missing."
+            ),
         )
 
     try:
-        return pd.read_csv(path)
+        return pd.read_csv(
+            path
+        )
 
     except Exception as exc:
         raise HTTPException(
@@ -137,9 +194,14 @@ def load_candidate_table() -> pd.DataFrame:
 def dataframe_records(
     dataframe: pd.DataFrame,
 ) -> list[dict]:
+    """
+    Convert a dataframe to JSON-safe records.
+    """
 
     cleaned = dataframe.where(
-        pd.notnull(dataframe),
+        pd.notnull(
+            dataframe
+        ),
         None,
     )
 
@@ -165,7 +227,7 @@ app = FastAPI(
 
 
 # =============================================================================
-# GENAI ASSISTANT
+# GENAI ASSISTANT ROUTER
 # =============================================================================
 
 app.include_router(
@@ -201,7 +263,6 @@ app.add_middleware(
 
 @app.get("/")
 def root():
-
     return {
         "project":
             "GenAR-PADER-AI",
@@ -227,21 +288,21 @@ def root():
 
 
 # =============================================================================
-# HEALTH
+# HEALTH CHECK
 # =============================================================================
 
 @app.get("/health")
 def health():
-
     file_status = {}
 
     all_available = True
 
     for name, path in FILES.items():
-
         exists = path.exists()
 
-        file_status[name] = exists
+        file_status[
+            name
+        ] = exists
 
         if not exists:
             all_available = False
@@ -266,11 +327,14 @@ def health():
 # DASHBOARD
 # =============================================================================
 
-@app.get("/api/dashboard")
+@app.get(
+    "/api/dashboard"
+)
 def dashboard():
-
     return load_json(
-        FILES["dashboard"]
+        FILES[
+            "dashboard"
+        ]
     )
 
 
@@ -278,18 +342,27 @@ def dashboard():
 # CANDIDATES
 # =============================================================================
 
-@app.get("/api/candidates")
+@app.get(
+    "/api/candidates"
+)
 def candidates():
-
-    dataframe = load_candidate_table()
-
-    dataframe = dataframe.sort_values(
-        by="rank"
+    dataframe = (
+        load_candidate_table()
     )
+
+    if "rank" in dataframe.columns:
+        dataframe = (
+            dataframe
+            .sort_values(
+                by="rank"
+            )
+        )
 
     return {
         "count":
-            len(dataframe),
+            len(
+                dataframe
+            ),
 
         "candidates":
             dataframe_records(
@@ -299,18 +372,33 @@ def candidates():
 
 
 # =============================================================================
-# SINGLE CANDIDATE
+# SINGLE CANDIDATE BY RANK
 # =============================================================================
 
-@app.get("/api/candidates/{rank}")
+@app.get(
+    "/api/candidates/{rank}"
+)
 def candidate_by_rank(
     rank: int,
 ):
+    dataframe = (
+        load_candidate_table()
+    )
 
-    dataframe = load_candidate_table()
+    if "rank" not in dataframe.columns:
+        raise HTTPException(
+            status_code=500,
+            detail=(
+                "Candidate table does not contain "
+                "a rank column."
+            ),
+        )
 
     matches = dataframe[
-        dataframe["rank"] == rank
+        dataframe[
+            "rank"
+        ]
+        == rank
     ]
 
     if matches.empty:
@@ -322,18 +410,36 @@ def candidate_by_rank(
             ),
         )
 
-    table_record = dataframe_records(
-        matches
-    )[0]
+    table_record = (
+        dataframe_records(
+            matches
+        )[0]
+    )
 
     cards_data = load_json(
-        FILES["candidate_cards"]
+        FILES[
+            "candidate_cards"
+        ]
     )
 
-    cards = cards_data.get(
-        "cards",
-        [],
-    )
+    cards = []
+
+    if isinstance(
+        cards_data,
+        dict,
+    ):
+        cards = (
+            cards_data.get(
+                "cards",
+                []
+            )
+        )
+
+    elif isinstance(
+        cards_data,
+        list,
+    ):
+        cards = cards_data
 
     card = next(
         (
@@ -363,12 +469,34 @@ def candidate_by_rank(
 # CANDIDATE BY REACTION NAME
 # =============================================================================
 
-@app.get("/api/reactions/{reaction_name}")
+@app.get(
+    "/api/reactions/{reaction_name}"
+)
 def candidate_by_reaction(
     reaction_name: str,
 ):
+    dataframe = (
+        load_candidate_table()
+    )
 
-    dataframe = load_candidate_table()
+    reaction_column = None
+
+    if "reaction" in dataframe.columns:
+        reaction_column = "reaction"
+
+    elif "reactionmeddrapt" in dataframe.columns:
+        reaction_column = (
+            "reactionmeddrapt"
+        )
+
+    if reaction_column is None:
+        raise HTTPException(
+            status_code=500,
+            detail=(
+                "Candidate table does not contain "
+                "a reaction column."
+            ),
+        )
 
     normalized_query = (
         reaction_name
@@ -378,7 +506,7 @@ def candidate_by_reaction(
 
     matches = dataframe[
         dataframe[
-            "reaction"
+            reaction_column
         ]
         .astype(str)
         .str.strip()
@@ -389,7 +517,9 @@ def candidate_by_reaction(
     if matches.empty:
         raise HTTPException(
             status_code=404,
-            detail="Candidate reaction not found.",
+            detail=(
+                "Candidate reaction not found."
+            ),
         )
 
     return dataframe_records(
@@ -401,12 +531,42 @@ def candidate_by_reaction(
 # PRIORITY FILTER
 # =============================================================================
 
-@app.get("/api/candidates/priority/{priority}")
+@app.get(
+    "/api/candidates/priority/{priority}"
+)
 def candidates_by_priority(
     priority: str,
 ):
+    dataframe = (
+        load_candidate_table()
+    )
 
-    dataframe = load_candidate_table()
+    priority_column = None
+
+    if (
+        "review_priority"
+        in dataframe.columns
+    ):
+        priority_column = (
+            "review_priority"
+        )
+
+    elif (
+        "priority"
+        in dataframe.columns
+    ):
+        priority_column = (
+            "priority"
+        )
+
+    if priority_column is None:
+        raise HTTPException(
+            status_code=500,
+            detail=(
+                "Candidate table does not contain "
+                "a priority column."
+            ),
+        )
 
     normalized_priority = (
         priority
@@ -447,15 +607,20 @@ def candidates_by_priority(
             "lower_priority_candidate",
     }
 
-    normalized_priority = aliases.get(
-        normalized_priority,
-        normalized_priority,
+    normalized_priority = (
+        aliases.get(
+            normalized_priority,
+            normalized_priority,
+        )
     )
 
     matches = dataframe[
         dataframe[
-            "review_priority"
+            priority_column
         ]
+        .astype(str)
+        .str.strip()
+        .str.lower()
         == normalized_priority
     ]
 
@@ -464,7 +629,9 @@ def candidates_by_priority(
             normalized_priority,
 
         "count":
-            len(matches),
+            len(
+                matches
+            ),
 
         "candidates":
             dataframe_records(
@@ -477,23 +644,29 @@ def candidates_by_priority(
 # CANDIDATE CARDS
 # =============================================================================
 
-@app.get("/api/candidate-cards")
+@app.get(
+    "/api/candidate-cards"
+)
 def candidate_cards():
-
     return load_json(
-        FILES["candidate_cards"]
+        FILES[
+            "candidate_cards"
+        ]
     )
 
 
 # =============================================================================
-# METADATA
+# APPLICATION METADATA
 # =============================================================================
 
-@app.get("/api/metadata")
+@app.get(
+    "/api/metadata"
+)
 def metadata():
-
     return load_json(
-        FILES["metadata"]
+        FILES[
+            "metadata"
+        ]
     )
 
 
@@ -501,11 +674,16 @@ def metadata():
 # ANALYTICAL SAFETY
 # =============================================================================
 
-@app.get("/api/safety")
+@app.get(
+    "/api/safety"
+)
 def analytical_safety():
-
-    metadata_data = load_json(
-        FILES["metadata"]
+    metadata_data = (
+        load_json(
+            FILES[
+                "metadata"
+            ]
+        )
     )
 
     return {
@@ -552,11 +730,14 @@ def analytical_safety():
 # FULL APPLICATION PAYLOAD
 # =============================================================================
 
-@app.get("/api/payload")
+@app.get(
+    "/api/payload"
+)
 def full_payload():
-
     return load_json(
-        FILES["api_payload"]
+        FILES[
+            "api_payload"
+        ]
     )
 
 
@@ -564,11 +745,14 @@ def full_payload():
 # GENERATED REPORT JSON
 # =============================================================================
 
-@app.get("/api/report/json")
+@app.get(
+    "/api/report/json"
+)
 def report_json():
-
     return load_json(
-        FILES["generated_report"]
+        FILES[
+            "generated_report"
+        ]
     )
 
 
@@ -581,8 +765,9 @@ def report_json():
     response_class=PlainTextResponse,
 )
 def report_text():
-
-    path = FILES["report"]
+    path = FILES[
+        "report"
+    ]
 
     if not path.exists():
         raise HTTPException(
@@ -609,12 +794,38 @@ def report_text():
 # APPLICATION INFO
 # =============================================================================
 
-@app.get("/api/info")
+@app.get(
+    "/api/info"
+)
 def application_info():
-
-    dashboard_data = load_json(
-        FILES["dashboard"]
+    dashboard_data = (
+        load_json(
+            FILES[
+                "dashboard"
+            ]
+        )
     )
+
+    if (
+        DATA_DIR
+        == RELEASE_DATA_DIR
+    ):
+        data_source_type = (
+            "validated_release"
+        )
+
+    elif (
+        DATA_DIR
+        == APP_DATA_DIR
+    ):
+        data_source_type = (
+            "deployment_app_data"
+        )
+
+    else:
+        data_source_type = (
+            "development_data"
+        )
 
     return {
         "application":
@@ -645,11 +856,11 @@ def application_info():
             ),
 
         "data_source":
-            (
-                "validated_release"
-                if DATA_DIR
-                == RELEASE_DATA_DIR
-                else "development_data"
+            data_source_type,
+
+        "data_directory":
+            str(
+                DATA_DIR
             ),
 
         "genai": {

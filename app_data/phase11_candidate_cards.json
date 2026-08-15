@@ -1,0 +1,238 @@
+{
+    "schema_version": "phase11_candidate_cards_v1",
+    "candidate_count": 8,
+    "cards": [
+        {
+            "rank": 1,
+            "reaction": "Acute kidney injury",
+            "metrics": {
+                "reported_cases": 22,
+                "percentage_of_all_cases": 2.15,
+                "serious_cases": 22,
+                "serious_percentage": 100.0,
+                "death_cases": 1,
+                "hospitalization_cases": 15
+            },
+            "classification": {
+                "evidence_level": "higher_frequency_candidate",
+                "review_priority": "higher_priority_candidate",
+                "requires_case_review": true
+            },
+            "evidence_summary": "Acute kidney injury was reported in 22 Bisoprolol-containing cases (2.15% of the analyzed cohort). 22 cases were classified as serious, including 1 death-associated case(s) and 15 hospitalization-associated case(s). The candidate is assigned higher_priority_candidate for review purposes only. This classification does not establish causality, incidence, disproportionality, or a confirmed safety signal.",
+            "recommended_action": "priority_detailed_review",
+            "follow_up_recommendation": "Prioritize for detailed case review, temporal assessment, clinical context review, confounder assessment, and external evidence evaluation.",
+            "interpretation_scope": "reported_case_pattern_only",
+            "analytical_boundaries": {
+                "frequency_is_incidence": false,
+                "confirmed_signal": false,
+                "confirmed_adverse_reaction": false,
+                "causality_established": false,
+                "disproportionality_established": false,
+                "interaction_established": false
+            }
+        },
+        {
+            "rank": 2,
+            "reaction": "Drug ineffective",
+            "metrics": {
+                "reported_cases": 11,
+                "percentage_of_all_cases": 1.07,
+                "serious_cases": 11,
+                "serious_percentage": 100.0,
+                "death_cases": 0,
+                "hospitalization_cases": 1
+            },
+            "classification": {
+                "evidence_level": "moderate_frequency_candidate",
+                "review_priority": "moderate_priority_candidate",
+                "requires_case_review": true
+            },
+            "evidence_summary": "Drug ineffective was reported in 11 Bisoprolol-containing cases (1.07% of the analyzed cohort). 11 cases were classified as serious, including 0 death-associated case(s) and 1 hospitalization-associated case(s). The candidate is assigned moderate_priority_candidate for review purposes only. This classification does not establish causality, incidence, disproportionality, or a confirmed safety signal.",
+            "recommended_action": "focused_review",
+            "follow_up_recommendation": "Perform focused case review and evaluate clinical context, co-medications, underlying disease, temporal information, and external evidence.",
+            "interpretation_scope": "reported_case_pattern_only",
+            "analytical_boundaries": {
+                "frequency_is_incidence": false,
+                "confirmed_signal": false,
+                "confirmed_adverse_reaction": false,
+                "causality_established": false,
+                "disproportionality_established": false,
+                "interaction_established": false
+            }
+        },
+        {
+            "rank": 3,
+            "reaction": "Cholestasis",
+            "metrics": {
+                "reported_cases": 6,
+                "percentage_of_all_cases": 0.59,
+                "serious_cases": 6,
+                "serious_percentage": 100.0,
+                "death_cases": 0,
+                "hospitalization_cases": 3
+            },
+            "classification": {
+                "evidence_level": "lower_frequency_candidate",
+                "review_priority": "lower_priority_candidate",
+                "requires_case_review": false
+            },
+            "evidence_summary": "Cholestasis was reported in 6 Bisoprolol-containing cases (0.59% of the analyzed cohort). 6 cases were classified as serious, including 0 death-associated case(s) and 3 hospitalization-associated case(s). The candidate is assigned lower_priority_candidate for review purposes only. This classification does not establish causality, incidence, disproportionality, or a confirmed safety signal.",
+            "recommended_action": "continued_monitoring",
+            "follow_up_recommendation": "Continue descriptive monitoring and review if additional cases or supporting evidence become available.",
+            "interpretation_scope": "reported_case_pattern_only",
+            "analytical_boundaries": {
+                "frequency_is_incidence": false,
+                "confirmed_signal": false,
+                "confirmed_adverse_reaction": false,
+                "causality_established": false,
+                "disproportionality_established": false,
+                "interaction_established": false
+            }
+        },
+        {
+            "rank": 4,
+            "reaction": "Hypokalaemia",
+            "metrics": {
+                "reported_cases": 6,
+                "percentage_of_all_cases": 0.59,
+                "serious_cases": 6,
+                "serious_percentage": 100.0,
+                "death_cases": 0,
+                "hospitalization_cases": 5
+            },
+            "classification": {
+                "evidence_level": "lower_frequency_candidate",
+                "review_priority": "moderate_priority_candidate",
+                "requires_case_review": true
+            },
+            "evidence_summary": "Hypokalaemia was reported in 6 Bisoprolol-containing cases (0.59% of the analyzed cohort). 6 cases were classified as serious, including 0 death-associated case(s) and 5 hospitalization-associated case(s). The candidate is assigned moderate_priority_candidate for review purposes only. This classification does not establish causality, incidence, disproportionality, or a confirmed safety signal.",
+            "recommended_action": "focused_review",
+            "follow_up_recommendation": "Perform focused case review and evaluate clinical context, co-medications, underlying disease, temporal information, and external evidence.",
+            "interpretation_scope": "reported_case_pattern_only",
+            "analytical_boundaries": {
+                "frequency_is_incidence": false,
+                "confirmed_signal": false,
+                "confirmed_adverse_reaction": false,
+                "causality_established": false,
+                "disproportionality_established": false,
+                "interaction_established": false
+            }
+        },
+        {
+            "rank": 5,
+            "reaction": "Hyponatraemia",
+            "metrics": {
+                "reported_cases": 6,
+                "percentage_of_all_cases": 0.59,
+                "serious_cases": 6,
+                "serious_percentage": 100.0,
+                "death_cases": 0,
+                "hospitalization_cases": 4
+            },
+            "classification": {
+                "evidence_level": "lower_frequency_candidate",
+                "review_priority": "lower_priority_candidate",
+                "requires_case_review": false
+            },
+            "evidence_summary": "Hyponatraemia was reported in 6 Bisoprolol-containing cases (0.59% of the analyzed cohort). 6 cases were classified as serious, including 0 death-associated case(s) and 4 hospitalization-associated case(s). The candidate is assigned lower_priority_candidate for review purposes only. This classification does not establish causality, incidence, disproportionality, or a confirmed safety signal.",
+            "recommended_action": "continued_monitoring",
+            "follow_up_recommendation": "Continue descriptive monitoring and review if additional cases or supporting evidence become available.",
+            "interpretation_scope": "reported_case_pattern_only",
+            "analytical_boundaries": {
+                "frequency_is_incidence": false,
+                "confirmed_signal": false,
+                "confirmed_adverse_reaction": false,
+                "causality_established": false,
+                "disproportionality_established": false,
+                "interaction_established": false
+            }
+        },
+        {
+            "rank": 6,
+            "reaction": "Drug interaction",
+            "metrics": {
+                "reported_cases": 5,
+                "percentage_of_all_cases": 0.49,
+                "serious_cases": 5,
+                "serious_percentage": 100.0,
+                "death_cases": 0,
+                "hospitalization_cases": 0
+            },
+            "classification": {
+                "evidence_level": "lower_frequency_candidate",
+                "review_priority": "lower_priority_candidate",
+                "requires_case_review": false
+            },
+            "evidence_summary": "Drug interaction was reported in 5 Bisoprolol-containing cases (0.49% of the analyzed cohort). 5 cases were classified as serious, including 0 death-associated case(s) and 0 hospitalization-associated case(s). The candidate is assigned lower_priority_candidate for review purposes only. This classification does not establish causality, incidence, disproportionality, or a confirmed safety signal.",
+            "recommended_action": "continued_monitoring",
+            "follow_up_recommendation": "Continue descriptive monitoring and review if additional cases or supporting evidence become available.",
+            "interpretation_scope": "reported_case_pattern_only",
+            "analytical_boundaries": {
+                "frequency_is_incidence": false,
+                "confirmed_signal": false,
+                "confirmed_adverse_reaction": false,
+                "causality_established": false,
+                "disproportionality_established": false,
+                "interaction_established": false
+            }
+        },
+        {
+            "rank": 7,
+            "reaction": "Hepatic cytolysis",
+            "metrics": {
+                "reported_cases": 5,
+                "percentage_of_all_cases": 0.49,
+                "serious_cases": 5,
+                "serious_percentage": 100.0,
+                "death_cases": 0,
+                "hospitalization_cases": 3
+            },
+            "classification": {
+                "evidence_level": "lower_frequency_candidate",
+                "review_priority": "lower_priority_candidate",
+                "requires_case_review": false
+            },
+            "evidence_summary": "Hepatic cytolysis was reported in 5 Bisoprolol-containing cases (0.49% of the analyzed cohort). 5 cases were classified as serious, including 0 death-associated case(s) and 3 hospitalization-associated case(s). The candidate is assigned lower_priority_candidate for review purposes only. This classification does not establish causality, incidence, disproportionality, or a confirmed safety signal.",
+            "recommended_action": "continued_monitoring",
+            "follow_up_recommendation": "Continue descriptive monitoring and review if additional cases or supporting evidence become available.",
+            "interpretation_scope": "reported_case_pattern_only",
+            "analytical_boundaries": {
+                "frequency_is_incidence": false,
+                "confirmed_signal": false,
+                "confirmed_adverse_reaction": false,
+                "causality_established": false,
+                "disproportionality_established": false,
+                "interaction_established": false
+            }
+        },
+        {
+            "rank": 8,
+            "reaction": "Joint swelling",
+            "metrics": {
+                "reported_cases": 5,
+                "percentage_of_all_cases": 0.49,
+                "serious_cases": 5,
+                "serious_percentage": 100.0,
+                "death_cases": 0,
+                "hospitalization_cases": 1
+            },
+            "classification": {
+                "evidence_level": "lower_frequency_candidate",
+                "review_priority": "lower_priority_candidate",
+                "requires_case_review": false
+            },
+            "evidence_summary": "Joint swelling was reported in 5 Bisoprolol-containing cases (0.49% of the analyzed cohort). 5 cases were classified as serious, including 0 death-associated case(s) and 1 hospitalization-associated case(s). The candidate is assigned lower_priority_candidate for review purposes only. This classification does not establish causality, incidence, disproportionality, or a confirmed safety signal.",
+            "recommended_action": "continued_monitoring",
+            "follow_up_recommendation": "Continue descriptive monitoring and review if additional cases or supporting evidence become available.",
+            "interpretation_scope": "reported_case_pattern_only",
+            "analytical_boundaries": {
+                "frequency_is_incidence": false,
+                "confirmed_signal": false,
+                "confirmed_adverse_reaction": false,
+                "causality_established": false,
+                "disproportionality_established": false,
+                "interaction_established": false
+            }
+        }
+    ]
+}

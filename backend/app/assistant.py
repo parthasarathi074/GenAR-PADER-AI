@@ -31,27 +31,53 @@ SOURCE_DATA_DIR = (
     / "data"
 )
 
+APP_DATA_DIR = (
+    PROJECT_ROOT
+    / "app_data"
+)
+
 
 def choose_data_dir() -> Path:
+    """
+    Select the validated application data source.
+
+    Priority:
+    1. Local validated release data
+    2. Deployment-safe app_data package
+    3. Development data directory
+    """
+
+    required_file = (
+        "phase11_api_payload.json"
+    )
+
     release_file = (
         RELEASE_DATA_DIR
-        / "phase11_api_payload.json"
+        / required_file
+    )
+
+    app_file = (
+        APP_DATA_DIR
+        / required_file
     )
 
     source_file = (
         SOURCE_DATA_DIR
-        / "phase11_api_payload.json"
+        / required_file
     )
 
     if release_file.exists():
         return RELEASE_DATA_DIR
 
+    if app_file.exists():
+        return APP_DATA_DIR
+
     if source_file.exists():
         return SOURCE_DATA_DIR
 
     raise RuntimeError(
-        "Validated Phase 11 application "
-        "outputs were not found."
+        "Validated Phase 11 application outputs "
+        "were not found."
     )
 
 
@@ -142,15 +168,13 @@ class AssistantResponse(BaseModel):
 # HELPERS
 # =============================================================================
 
-def load_json(
-    path: Path,
-):
+def load_json(path: Path):
     if not path.exists():
         raise HTTPException(
             status_code=500,
             detail=(
-                f"Required evidence file "
-                f"missing: {path.name}"
+                f"Required evidence file missing: "
+                f"{path.name}"
             ),
         )
 
@@ -171,15 +195,13 @@ def load_json(
         )
 
 
-def load_text(
-    path: Path,
-) -> str:
+def load_text(path: Path) -> str:
     if not path.exists():
         raise HTTPException(
             status_code=500,
             detail=(
-                f"Required report file "
-                f"missing: {path.name}"
+                f"Required report file missing: "
+                f"{path.name}"
             ),
         )
 
@@ -199,9 +221,7 @@ def load_candidate_table():
     if not CANDIDATE_TABLE_FILE.exists():
         raise HTTPException(
             status_code=500,
-            detail=(
-                "Candidate table missing."
-            ),
+            detail="Candidate table missing.",
         )
 
     try:
@@ -222,8 +242,8 @@ def load_candidate_table():
         raise HTTPException(
             status_code=500,
             detail=(
-                "Unable to read candidate "
-                f"table: {exc}"
+                "Unable to read candidate table: "
+                f"{exc}"
             ),
         )
 
@@ -392,7 +412,7 @@ def get_client() -> OpenAI:
 
 
 # =============================================================================
-# STATUS
+# STATUS ENDPOINT
 # =============================================================================
 
 @router.get("/status")
@@ -432,7 +452,7 @@ def assistant_status():
 
 
 # =============================================================================
-# CHAT
+# CHAT ENDPOINT
 # =============================================================================
 
 @router.post(
@@ -450,9 +470,7 @@ def assistant_chat(
     if not question:
         raise HTTPException(
             status_code=400,
-            detail=(
-                "Question cannot be empty."
-            ),
+            detail="Question cannot be empty.",
         )
 
     client = get_client()
@@ -461,9 +479,7 @@ def assistant_chat(
         build_validated_context()
     )
 
-    history = (
-        request.history[-6:]
-    )
+    history = request.history[-6:]
 
     conversation = []
 
@@ -496,16 +512,16 @@ def assistant_chat(
     )
 
     try:
-        response = (
-            client.responses.create(
-                model="gpt-5.6",
+        response = client.responses.create(
+            model="gpt-5.6",
 
-                instructions=(
-                    SYSTEM_INSTRUCTIONS
-                ),
+            instructions=(
+                SYSTEM_INSTRUCTIONS
+            ),
 
-                input=conversation,
-            )
+            input=conversation,
+
+            store=False,
         )
 
     except Exception as exc:
@@ -526,8 +542,7 @@ def assistant_chat(
         raise HTTPException(
             status_code=502,
             detail=(
-                "The model returned an "
-                "empty response."
+                "The model returned an empty response."
             ),
         )
 
@@ -543,7 +558,7 @@ def assistant_chat(
 
         evidence_source=(
             "validated_phase10_phase11_"
-            "release_outputs"
+            "application_outputs"
         ),
 
         safety={
