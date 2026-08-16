@@ -6,7 +6,7 @@ from typing import Literal
 import pandas as pd
 
 from fastapi import APIRouter, HTTPException
-from openai import OpenAI
+from groq import Groq
 from pydantic import BaseModel, Field
 
 
@@ -20,64 +20,26 @@ APP_DIR = CURRENT_FILE.parent
 BACKEND_DIR = APP_DIR.parent
 PROJECT_ROOT = BACKEND_DIR.parent
 
-RELEASE_DATA_DIR = (
-    PROJECT_ROOT
-    / "release"
-    / "data"
-)
-
-SOURCE_DATA_DIR = (
-    PROJECT_ROOT
-    / "data"
-)
-
-APP_DATA_DIR = (
-    PROJECT_ROOT
-    / "app_data"
-)
+RELEASE_DATA_DIR = PROJECT_ROOT / "release" / "data"
+SOURCE_DATA_DIR = PROJECT_ROOT / "data"
+APP_DATA_DIR = PROJECT_ROOT / "app_data"
 
 
 def choose_data_dir() -> Path:
-    """
-    Select the validated application data source.
+    required_file = "phase11_api_payload.json"
 
-    Priority:
-    1. Local validated release data
-    2. Deployment-safe app_data package
-    3. Development data directory
-    """
+    candidates = [
+        RELEASE_DATA_DIR,
+        APP_DATA_DIR,
+        SOURCE_DATA_DIR,
+    ]
 
-    required_file = (
-        "phase11_api_payload.json"
-    )
-
-    release_file = (
-        RELEASE_DATA_DIR
-        / required_file
-    )
-
-    app_file = (
-        APP_DATA_DIR
-        / required_file
-    )
-
-    source_file = (
-        SOURCE_DATA_DIR
-        / required_file
-    )
-
-    if release_file.exists():
-        return RELEASE_DATA_DIR
-
-    if app_file.exists():
-        return APP_DATA_DIR
-
-    if source_file.exists():
-        return SOURCE_DATA_DIR
+    for directory in candidates:
+        if (directory / required_file).exists():
+            return directory
 
     raise RuntimeError(
-        "Validated Phase 11 application outputs "
-        "were not found."
+        "Validated application evidence could not be located."
     )
 
 
@@ -85,32 +47,19 @@ DATA_DIR = choose_data_dir()
 
 
 # =============================================================================
-# DATA FILES
+# FILES
 # =============================================================================
 
 DASHBOARD_FILE = (
-    DATA_DIR
-    / "phase11_dashboard_summary.json"
+    DATA_DIR / "phase11_dashboard_summary.json"
 )
 
 CANDIDATE_TABLE_FILE = (
-    DATA_DIR
-    / "phase11_candidate_table.csv"
-)
-
-CANDIDATE_CARDS_FILE = (
-    DATA_DIR
-    / "phase11_candidate_cards.json"
+    DATA_DIR / "phase11_candidate_table.csv"
 )
 
 METADATA_FILE = (
-    DATA_DIR
-    / "phase11_application_metadata.json"
-)
-
-REPORT_FILE = (
-    DATA_DIR
-    / "phase10_pharmacovigilance_report.txt"
+    DATA_DIR / "phase11_application_metadata.json"
 )
 
 
@@ -125,7 +74,7 @@ router = APIRouter(
 
 
 # =============================================================================
-# REQUEST / RESPONSE MODELS
+# MODELS
 # =============================================================================
 
 class ChatMessage(BaseModel):
@@ -136,31 +85,28 @@ class ChatMessage(BaseModel):
 
     content: str = Field(
         min_length=1,
-        max_length=6000,
+        max_length=3000,
     )
 
 
 class AssistantRequest(BaseModel):
     question: str = Field(
         min_length=1,
-        max_length=4000,
+        max_length=2000,
     )
 
     history: list[ChatMessage] = Field(
         default_factory=list,
-        max_length=10,
+        max_length=6,
     )
 
 
 class AssistantResponse(BaseModel):
     answer: str
-
     model: str
-
+    provider: str
     scope: str
-
     evidence_source: str
-
     safety: dict
 
 
@@ -172,10 +118,7 @@ def load_json(path: Path):
     if not path.exists():
         raise HTTPException(
             status_code=500,
-            detail=(
-                f"Required evidence file missing: "
-                f"{path.name}"
-            ),
+            detail=f"Missing evidence file: {path.name}",
         )
 
     try:
@@ -188,32 +131,7 @@ def load_json(path: Path):
     except Exception as exc:
         raise HTTPException(
             status_code=500,
-            detail=(
-                f"Unable to load "
-                f"{path.name}: {exc}"
-            ),
-        )
-
-
-def load_text(path: Path) -> str:
-    if not path.exists():
-        raise HTTPException(
-            status_code=500,
-            detail=(
-                f"Required report file missing: "
-                f"{path.name}"
-            ),
-        )
-
-    try:
-        return path.read_text(
-            encoding="utf-8"
-        )
-
-    except Exception as exc:
-        raise HTTPException(
-            status_code=500,
-            detail=str(exc),
+            detail=f"Unable to read {path.name}: {exc}",
         )
 
 
@@ -241,57 +159,134 @@ def load_candidate_table():
     except Exception as exc:
         raise HTTPException(
             status_code=500,
-            detail=(
-                "Unable to read candidate table: "
-                f"{exc}"
-            ),
+            detail=f"Unable to read candidate table: {exc}",
         )
 
 
 # =============================================================================
-# VALIDATED CONTEXT
+# COMPACT VALIDATED CONTEXT
 # =============================================================================
 
 def build_validated_context() -> str:
+    """
+    Build a compact evidence payload suitable for
+    Groq free-tier token limits.
+
+    We intentionally exclude the large Phase 10
+    human-readable report and candidate-card payload.
+    """
+
     dashboard = load_json(
         DASHBOARD_FILE
-    )
-
-    cards = load_json(
-        CANDIDATE_CARDS_FILE
     )
 
     metadata = load_json(
         METADATA_FILE
     )
 
-    candidates = load_candidate_table()
+    candidate_rows = load_candidate_table()
 
-    report = load_text(
-        REPORT_FILE
-    )
+    compact_candidates = []
 
-    context = {
-        "dashboard":
-            dashboard,
+    for row in candidate_rows:
+        compact_candidates.append(
+            {
+                "rank":
+                    row.get("rank"),
 
-        "candidate_table":
-            candidates,
+                "reaction":
+                    row.get("reaction"),
 
-        "candidate_cards":
-            cards,
+                "reported_cases":
+                    row.get("reported_cases"),
 
-        "application_metadata":
-            metadata,
+                "percentage_of_all_cases":
+                    row.get("percentage_of_all_cases"),
 
-        "controlled_report":
-            report,
+                "serious_cases":
+                    row.get("serious_cases"),
+
+                "serious_percentage":
+                    row.get("serious_percentage"),
+
+                "death_cases":
+                    row.get("death_cases"),
+
+                "hospitalization_cases":
+                    row.get("hospitalization_cases"),
+
+                "priority":
+                    (
+                        row.get("review_priority")
+                        or row.get("priority")
+                    ),
+            }
+        )
+
+    compact_context = {
+        "dataset": {
+            "total_safety_reports":
+                dashboard.get(
+                    "total_safety_reports"
+                ),
+
+            "bisoprolol_cases":
+                dashboard.get(
+                    "bisoprolol_cases"
+                ),
+
+            "candidate_reactions":
+                dashboard.get(
+                    "candidate_reactions"
+                ),
+
+            "priority_distribution":
+                dashboard.get(
+                    "priority_distribution"
+                ),
+
+            "top_candidate":
+                dashboard.get(
+                    "top_candidate"
+                ),
+        },
+
+        "candidates":
+            compact_candidates,
+
+        "analytical_status":
+            dashboard.get(
+                "analytical_status",
+                {}
+            ),
+
+        "interpretation":
+            dashboard.get(
+                "interpretation"
+            ),
+
+        "priority_interpretation":
+            dashboard.get(
+                "priority_interpretation"
+            ),
+
+        "limitations":
+            metadata.get(
+                "limitations",
+                []
+            ),
+
+        "analytical_restrictions":
+            metadata.get(
+                "analytical_restrictions",
+                {}
+            ),
     }
 
     return json.dumps(
-        context,
+        compact_context,
         ensure_ascii=False,
-        indent=2,
+        separators=(",", ":"),
     )
 
 
@@ -300,119 +295,56 @@ def build_validated_context() -> str:
 # =============================================================================
 
 SYSTEM_INSTRUCTIONS = """
-You are the GenAR-PADER-AI pharmacovigilance
-decision-support assistant.
+You are the GenAR-PADER-AI pharmacovigilance evidence assistant.
 
-You must answer ONLY from the VALIDATED PROJECT
-EVIDENCE supplied to you.
+Use ONLY the validated project evidence supplied in the current request.
 
-The supplied evidence is the source of truth for
-this conversation.
+Rules:
 
-STRICT RULES
-
-1. Do not introduce external medical facts,
-   literature, guidelines, drug-label information,
-   epidemiology, incidence estimates or general
-   pharmacology unless they are explicitly present
-   in the supplied project evidence.
-
-2. If the evidence does not support the requested
-   fact, clearly say:
-   "The validated project evidence does not support
-   that conclusion."
-
-3. Reported case frequency is NOT incidence.
-
-4. No internal non-Bisoprolol comparator exists.
-
-5. ROR was NOT calculated.
-
-6. PRR was NOT calculated.
-
-7. Causality is NOT established.
-
-8. Disproportionality is NOT established.
-
-9. Candidate reactions are NOT confirmed safety
-   signals.
-
-10. Candidate reactions are NOT confirmed adverse
-    reactions.
-
-11. Co-medication patterns do NOT establish
-    drug-drug interactions.
-
-12. Review priority is a TRIAGE classification only.
-
-13. Never convert "higher priority" into:
-    - confirmed signal
-    - stronger causality
-    - increased risk
-    - incidence
-    - proven association
-
-14. Never provide individual patient diagnosis,
-    prescribing instructions, treatment advice,
-    dose adjustment or medical emergency guidance
-    from this dataset.
-
-15. You may:
-    - summarize candidate evidence
-    - compare reported candidate counts
-    - explain priority classifications
-    - explain seriousness counts
-    - summarize limitations
-    - explain the analytical pipeline
-    - explain why ROR/PRR are unavailable
-    - identify the highest or lowest reported
-      candidates
-    - explain the validated dashboard fields
-
-16. Keep numerical values exactly consistent with
-    the supplied evidence.
-
-17. When discussing a candidate, prefer the phrase:
-    "reported cases"
-    rather than:
-    "patients affected"
-    or
-    "incidence".
-
-18. If a user asks whether Bisoprolol caused a
-    reaction, explicitly state that causality was
-    not established by this project.
-
-19. Keep answers concise and clear.
-
-20. End analytical answers with a short scope note
-    when appropriate:
-    "This is descriptive/exploratory
-    pharmacovigilance decision support."
+- Reported frequency is not incidence.
+- No internal non-Bisoprolol comparator exists.
+- ROR was not calculated.
+- PRR was not calculated.
+- Causality is not established.
+- Disproportionality is not established.
+- Candidate reactions are not confirmed safety signals.
+- Review priority is a triage classification only.
+- Co-medication patterns do not prove drug-drug interactions.
+- Do not introduce external medical information.
+- Do not provide diagnosis or treatment advice.
+- Preserve all numerical values exactly.
+- Prefer the phrase "reported cases".
+- If evidence is insufficient, say:
+  "The validated project evidence does not support that conclusion."
+- Keep answers concise, usually under 150 words.
 """
 
 
 # =============================================================================
-# OPENAI CLIENT
+# GROQ CLIENT
 # =============================================================================
 
-def get_client() -> OpenAI:
-    if not os.getenv(
-        "OPENAI_API_KEY"
-    ):
+def get_client() -> Groq:
+    api_key = os.getenv(
+        "GROQ_API_KEY"
+    )
+
+    if not api_key:
         raise HTTPException(
             status_code=503,
             detail=(
-                "OPENAI_API_KEY is not configured "
-                "on the backend."
+                "The GenAI assistant is "
+                "temporarily unavailable."
             ),
         )
 
-    return OpenAI()
+    return Groq(
+        api_key=api_key
+    )
 
 
 # =============================================================================
-# STATUS ENDPOINT
+# STATUS
 # =============================================================================
 
 @router.get("/status")
@@ -424,12 +356,15 @@ def assistant_status():
         "configured":
             bool(
                 os.getenv(
-                    "OPENAI_API_KEY"
+                    "GROQ_API_KEY"
                 )
             ),
 
+        "provider":
+            "Groq",
+
         "model":
-            "gpt-5.6",
+            "openai/gpt-oss-20b",
 
         "evidence_source":
             str(DATA_DIR),
@@ -452,7 +387,7 @@ def assistant_status():
 
 
 # =============================================================================
-# CHAT ENDPOINT
+# CHAT
 # =============================================================================
 
 @router.post(
@@ -479,77 +414,100 @@ def assistant_chat(
         build_validated_context()
     )
 
-    history = request.history[-6:]
+    messages = [
+        {
+            "role":
+                "system",
 
-    conversation = []
+            "content":
+                SYSTEM_INSTRUCTIONS,
+        }
+    ]
 
-    for message in history:
-        conversation.append(
+    # Keep only a small recent history.
+    for message in request.history[-4:]:
+        messages.append(
             {
                 "role":
                     message.role,
 
                 "content":
-                    message.content,
+                    message.content[:1500],
             }
         )
 
-    conversation.append(
+    messages.append(
         {
             "role":
                 "user",
 
             "content":
                 (
-                    "VALIDATED PROJECT EVIDENCE\n"
-                    "==========================\n"
+                    "VALIDATED PROJECT EVIDENCE:\n"
                     f"{validated_context}\n\n"
-                    "CURRENT USER QUESTION\n"
-                    "=====================\n"
+                    "QUESTION:\n"
                     f"{question}"
                 ),
         }
     )
 
     try:
-        response = client.responses.create(
-            model="gpt-5.6",
+        response = (
+            client
+            .chat
+            .completions
+            .create(
+                model="openai/gpt-oss-20b",
 
-            instructions=(
-                SYSTEM_INSTRUCTIONS
-            ),
+                messages=messages,
 
-            input=conversation,
+                temperature=0.1,
 
-            store=False,
+                max_completion_tokens=350,
+
+                stream=False,
+            )
         )
 
     except Exception as exc:
+        print("\n" + "=" * 100)
+        print("GROQ API ERROR")
+        print("=" * 100)
+        print(type(exc).__name__)
+        print(str(exc))
+        print("=" * 100 + "\n")
+
         raise HTTPException(
-            status_code=502,
+            status_code=503,
             detail=(
-                "OpenAI request failed: "
-                f"{exc}"
+                "The GenAI assistant is temporarily "
+                "unavailable. Please try again later."
             ),
         )
 
     answer = (
-        response.output_text
+        response
+        .choices[0]
+        .message
+        .content
         or ""
     ).strip()
 
     if not answer:
         raise HTTPException(
-            status_code=502,
+            status_code=503,
             detail=(
-                "The model returned an empty response."
+                "The GenAI assistant returned "
+                "an empty response."
             ),
         )
 
     return AssistantResponse(
         answer=answer,
 
-        model="gpt-5.6",
+        model="openai/gpt-oss-20b",
+
+        provider="Groq",
 
         scope=(
             "descriptive_exploratory_"
@@ -557,8 +515,7 @@ def assistant_chat(
         ),
 
         evidence_source=(
-            "validated_phase10_phase11_"
-            "application_outputs"
+            "validated_phase11_compact_context"
         ),
 
         safety={
